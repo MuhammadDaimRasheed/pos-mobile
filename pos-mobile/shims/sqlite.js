@@ -7,7 +7,7 @@ class Stmt{constructor(d,s){this.d=d;this.sql=s;this.r=false;this.w=!/^\s*(selec
 class Database{constructor(){const{SQL,bytes}=P();this.h=bytes?new SQL.Database(bytes):new SQL.Database();this.depth=0;this.t=0;P().db=this;}
  prepare(s){return new Stmt(this,s);}
  exec(s){this.h.exec(s);this.dirty();return this;}
- pragma(s){try{const r=this.h.exec("PRAGMA "+s)[0];return r?r.values.map(v=>Object.fromEntries(r.columns.map((c,i)=>[c,v[i]]))):[];}catch{return[];}}
+ pragma(s,o){try{const r=this.h.exec("PRAGMA "+s)[0];if(o&&o.simple)return r?r.values[0][0]:undefined;return r?r.values.map(v=>Object.fromEntries(r.columns.map((c,i)=>[c,v[i]]))):[];}catch{return o&&o.simple?undefined:[];}}
  transaction(fn){const f=(...a)=>{const n="sp"+this.depth++;this.h.exec(this.depth===1?"BEGIN":"SAVEPOINT "+n);try{const r=fn(...a);this.h.exec(this.depth===1?"COMMIT":"RELEASE "+n);this.depth--;this.dirty();return r;}catch(e){this.h.exec(this.depth===1?"ROLLBACK":"ROLLBACK TO "+n);this.depth--;throw e;}};f.deferred=f.immediate=f.exclusive=f;return f;}
  dirty(){if(this.t)return;this.t=setTimeout(()=>{this.t=0;this.save();},400);}
  save(){if(this.depth)return this.dirty();const b=this.h.export();this.h.exec("PRAGMA foreign_keys=ON");P().put(b);return b;}
