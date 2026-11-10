@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-java@v4
         with: {distribution: temurin, java-version: 17}
       - run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
-      - run: npm install && npm run build && npx cap add android && npx cap sync android
+      - run: npm install && npm run build && npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with: {name: islamic-pizza-pos-apk, path: pos-mobile/android/app/build/outputs/apk/debug/app-debug.apk}
