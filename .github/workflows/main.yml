@@ -3,6 +3,9 @@ on: [push, workflow_dispatch]
 jobs:
   apk:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pos-mobile
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,4 +16,4 @@ jobs:
       - run: npm install && npm run build && npx cap add android && npx cap sync android
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
-        with: {name: islamic-pizza-pos-apk, path: android/app/build/outputs/apk/debug/app-debug.apk}
+        with: {name: islamic-pizza-pos-apk, path: pos-mobile/android/app/build/outputs/apk/debug/app-debug.apk}
