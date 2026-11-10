@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Islamic Pizza POS</string>
+    <string name="title_activity_main">Islamic Pizza POS</string>
+    <string name="package_name">com.islamicpizza.pos</string>
+    <string name="custom_url_scheme">com.islamicpizza.pos</string>
+</resources>
