@@ -1,0 +1,66 @@
+/* Mobile layer for Islamic Pizza POS: applies on phone-sized screens only. */
+#m-bar,#m-backdrop{display:none}
+@media (max-width:767px){
+  html,body{height:100%;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  #root{height:100%}
+  input,select,textarea{font-size:16px}
+
+  /* ---------- Shell: sidebar becomes a slide-in drawer ---------- */
+  #root>.h-screen.overflow-hidden{display:block;height:100dvh;position:relative}
+  #root>.h-screen.overflow-hidden>main{height:100%;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;
+    padding-top:calc(48px + env(safe-area-inset-top,0px))}
+  aside{position:fixed;top:0;bottom:0;left:0;width:min(80vw,300px);z-index:60;
+    transform:translateX(-105%);transition:transform .22s ease;padding-top:env(safe-area-inset-top,0px)}
+  body.m-nav-open aside{transform:none;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  #m-backdrop{display:block;position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+  body.m-nav-open #m-backdrop{opacity:1;pointer-events:auto}
+  body.m-has-shell #m-bar{display:flex}
+  #m-bar{position:fixed;top:0;left:0;right:0;z-index:50;align-items:center;gap:6px;box-sizing:border-box;
+    height:calc(48px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 12px 0 6px;
+    background:var(--card);color:var(--foreground);border-bottom:1px solid var(--border)}
+  #m-menu{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:inherit;border-radius:8px}
+  #m-menu:active{background:var(--accent)}
+  #m-title{font-weight:700;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* ---------- Page spacing ---------- */
+  main>div.p-6,main>div.p-4,main>div>div.flex-1.p-4{padding:10px}
+  main>div.max-w-4xl,main>div.max-w-2xl{max-width:100%}
+  main h1{font-size:1.25rem;line-height:1.5rem}
+  main div:has(>h1),main .flex.items-center.justify-between.gap-3{flex-wrap:wrap;gap:8px}
+  main .w-64,main .w-48,main .w-40{width:auto;flex:1 1 130px;min-width:0}
+  main .absolute.w-80{width:min(20rem,calc(100vw - 24px));max-width:calc(100vw - 24px)}
+  /* chip rows (categories) scroll sideways instead of wrapping into many lines */
+  main .flex.flex-wrap.gap-1\.5{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  main .flex.flex-wrap.gap-1\.5>*{flex:none}
+
+  /* ---------- Two-column pages (New Order / Orders / Ledger): list scrolls as a whole ---------- */
+  main div.flex.h-full>div.flex-1{overflow-y:auto;overflow-x:hidden}
+  main div.flex.h-full>div.flex-1>*{flex-shrink:0}
+  main div.flex.h-full>div.flex-1>.flex-1{flex:none;overflow:visible}
+  main div.flex.h-full>div.flex-1>.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.m-has-panel main div.flex.h-full>div.flex-1{padding-bottom:76px}
+
+  /* side panel (cart / order details) becomes a bottom sheet */
+  .m-panel{position:fixed;left:0;right:0;bottom:0;width:100%;height:min(84dvh,680px);z-index:40;
+    border-left:0;border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,.2);
+    transform:translateY(calc(100% - 56px - env(safe-area-inset-bottom,0px)));transition:transform .25s ease;
+    padding-bottom:env(safe-area-inset-bottom,0px);overflow:hidden}
+  .m-panel.m-open{transform:none}
+  .m-panel::before{content:attr(data-m-title);flex:none;display:flex;align-items:center;justify-content:space-between;
+    height:56px;padding:0 18px;font-weight:700;font-size:1rem;border-bottom:1px solid var(--border);background:var(--card);cursor:pointer}
+
+  /* ---------- Tables become cards ---------- */
+  main table,main tbody{display:block;width:100%}
+  main thead{display:none}
+  main tbody tr{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;padding:10px 12px;border-bottom:1px solid var(--border)}
+  main tbody tr:last-child{border-bottom:0}
+  main td{display:flex;flex-direction:column;align-items:flex-start;gap:1px;height:auto;max-width:none;min-width:0;
+    padding:0;text-align:left;white-space:normal;overflow:visible;word-break:break-word}
+  main td[data-label]:not([data-label=""])::before{content:attr(data-label);font-size:.7rem;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:.03em}
+  main td[data-label=""]{grid-column:1/-1;flex-direction:row;justify-content:flex-end;gap:8px}
+  main td[colspan]{display:block;grid-column:1/-1;text-align:center}
+
+  /* ---------- Misc ---------- */
+  #root .w-80.space-y-6,#root .w-96.space-y-6{width:min(92vw,24rem)}
+  [data-slot=dialog-content]{max-height:88dvh;overflow-y:auto}
+}
